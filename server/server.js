@@ -56,6 +56,15 @@ app.get('/api/health', (req, res) => {
 // Register API Routes
 app.use('/api', apiRoutes);
 
+// Serve Frontend Static Files in Production (Render All-in-One Deployment)
+const path = require('path');
+if (process.env.NODE_ENV === 'production' || process.env.RENDER) {
+  app.use(express.static(path.join(__dirname, '../client/dist')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../client', 'dist', 'index.html'));
+  });
+}
+
 // Global Error Handler (Sanitizes stack traces & protects sensitive backend information)
 app.use((err, req, res, next) => {
   console.error('Unhandled Server Error:', err);
