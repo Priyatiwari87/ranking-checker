@@ -12,6 +12,8 @@ exports.addInMemoryHistory = (record) => {
   return record._id;
 };
 
+exports.getInMemoryHistory = () => inMemoryHistory;
+
 /**
  * GET /api/history - Retrieve check history list with search, filter, pagination.
  */

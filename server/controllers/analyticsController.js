@@ -5,23 +5,43 @@ const CheckHistory = require('../models/CheckHistory');
  */
 exports.getAnalytics = async (req, res) => {
   try {
+    const historyController = require('./historyController');
+
     if (!req.dbConnected) {
-      // Basic fallback if database is not active
+      const inMemoryDocs = historyController.getInMemoryHistory();
+      const totalChecks = inMemoryDocs.length;
+      const successfulChecks = inMemoryDocs.filter(d => d.found).length;
+      const notFound = inMemoryDocs.filter(d => !d.found).length;
+      const foundDocs = inMemoryDocs.filter(d => d.found && d.ranking != null);
+
+      let averageRank = null;
+      let bestRank = null;
+      let top3Count = 0;
+      let top10Count = 0;
+
+      if (foundDocs.length > 0) {
+        const sum = foundDocs.reduce((acc, doc) => acc + doc.ranking, 0);
+        averageRank = Math.round((sum / foundDocs.length) * 10) / 10;
+        bestRank = Math.min(...foundDocs.map(d => d.ranking));
+        top3Count = foundDocs.filter(d => d.ranking <= 3).length;
+        top10Count = foundDocs.filter(d => d.ranking <= 10).length;
+      }
+
       return res.status(200).json({
         success: true,
         metrics: {
-          totalChecks: 0,
-          successfulChecks: 0,
-          notFound: 0,
-          averageRank: null,
-          bestRank: null,
-          top3Count: 0,
-          top10Count: 0
+          totalChecks,
+          successfulChecks,
+          notFound,
+          averageRank,
+          bestRank,
+          top3Count,
+          top10Count
         },
-        recentChecks: [],
+        recentChecks: inMemoryDocs.slice(0, 10),
         trendData: [],
         hasEnoughData: false,
-        source: 'in_memory_empty'
+        source: 'in_memory'
       });
     }
 

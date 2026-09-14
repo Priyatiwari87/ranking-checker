@@ -60,32 +60,48 @@ exports.checkRanking = async (req, res) => {
       rankingChange = previousCheck.ranking - checkResult.ranking;
     }
 
-    // Save record to DB if MongoDB is active
+    // Save record to DB if MongoDB is active, else save to in-memory store
+    const historyController = require('./historyController');
     let savedId = null;
+
+    if (!req.dbConnected && previousCheck === null) {
+      const memHistory = historyController.getInMemoryHistory();
+      previousCheck = memHistory.find(i => i.domain === cleanDomain && i.searchQuery === cleanQuery);
+      if (previousCheck && previousCheck.found && checkResult.found) {
+        previousRanking = previousCheck.ranking;
+        rankingChange = previousCheck.ranking - checkResult.ranking;
+      }
+    }
+
+    const recordData = {
+      businessName: cleanBusinessName,
+      websiteUrl: cleanWebsiteUrl,
+      domain: cleanDomain,
+      searchQuery: cleanQuery,
+      location: location ? location.trim() : '',
+      depth: searchDepth,
+      ranking: checkResult.ranking,
+      found: checkResult.found,
+      totalChecked: checkResult.totalChecked,
+      previousRanking,
+      rankingChange,
+      provider: checkResult.provider,
+      isDemo: checkResult.isDemo,
+      results: checkResult.results,
+      checkedAt: new Date()
+    };
+
     if (req.dbConnected) {
       try {
-        const historyRecord = new CheckHistory({
-          businessName: cleanBusinessName,
-          websiteUrl: cleanWebsiteUrl,
-          domain: cleanDomain,
-          searchQuery: cleanQuery,
-          location: location ? location.trim() : '',
-          depth: searchDepth,
-          ranking: checkResult.ranking,
-          found: checkResult.found,
-          totalChecked: checkResult.totalChecked,
-          previousRanking,
-          rankingChange,
-          provider: checkResult.provider,
-          isDemo: checkResult.isDemo,
-          results: checkResult.results
-        });
-
+        const historyRecord = new CheckHistory(recordData);
         const saved = await historyRecord.save();
         savedId = saved._id;
       } catch (err) {
         console.warn('Could not persist check history to MongoDB:', err.message);
+        savedId = historyController.addInMemoryHistory(recordData);
       }
+    } else {
+      savedId = historyController.addInMemoryHistory(recordData);
     }
 
     return res.status(200).json({
