@@ -4,7 +4,7 @@ import { getHealthApi } from '../services/api';
 
 const Settings = () => {
   const [provider, setProvider] = useState(() => {
-    return localStorage.getItem('selected_provider') || 'serpapi';
+    return localStorage.getItem('selected_provider') || 'custom';
   });
   const [saved, setSaved] = useState(false);
 
@@ -12,11 +12,7 @@ const Settings = () => {
     getHealthApi()
       .then((data) => {
         if (data && data.searchProvider) {
-          const active = data.searchProvider.toLowerCase();
-          const savedLocal = localStorage.getItem('selected_provider');
-          if (!savedLocal) {
-            setProvider(active.includes('serp') ? 'serpapi' : 'demo');
-          }
+          setProvider('custom');
         }
       })
       .catch(() => {});
@@ -38,7 +34,7 @@ const Settings = () => {
           <span>Ranking Engine & Provider Settings</span>
         </h2>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-          Configure search provider adapters, API credentials, and environment settings.
+          Configure search provider adapters, custom web scrapers, and environment settings.
         </p>
       </div>
 
@@ -50,6 +46,34 @@ const Settings = () => {
 
         <form onSubmit={handleSave} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Custom Google Scraper Provider Option */}
+            <div
+              className={`p-5 rounded-2xl border cursor-pointer transition-all ${
+                provider === 'custom'
+                  ? 'bg-sky-500/10 border-sky-500 ring-2 ring-sky-500/20'
+                  : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 opacity-80 hover:opacity-100'
+              }`}
+              onClick={() => setProvider('custom')}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-bold text-slate-900 dark:text-white text-sm">
+                  Custom Google Scraper (Live SERP)
+                </span>
+                <span
+                  className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded ${
+                    provider === 'custom'
+                      ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
+                      : 'bg-slate-200 dark:bg-slate-800 text-slate-500'
+                  }`}
+                >
+                  {provider === 'custom' ? 'CUSTOM API ACTIVE' : 'LIVE SCRAPER'}
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Fetches live organic Google Search results directly using custom backend Web Scraper. 100% custom code, no 3rd party API keys required.
+              </p>
+            </div>
+
             {/* Demo Provider Card Option */}
             <div
               className={`p-5 rounded-2xl border cursor-pointer transition-all ${
@@ -74,35 +98,7 @@ const Settings = () => {
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Generates realistic simulated search engine results. Recommended for local testing without external API keys.
-              </p>
-            </div>
-
-            {/* SerpApi Provider Option */}
-            <div
-              className={`p-5 rounded-2xl border cursor-pointer transition-all ${
-                provider === 'serpapi'
-                  ? 'bg-sky-500/10 border-sky-500 ring-2 ring-sky-500/20'
-                  : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 opacity-80 hover:opacity-100'
-              }`}
-              onClick={() => setProvider('serpapi')}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-bold text-slate-900 dark:text-white text-sm">
-                  Google / SerpApi Provider
-                </span>
-                <span
-                  className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded ${
-                    provider === 'serpapi'
-                      ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
-                      : 'bg-slate-200 dark:bg-slate-800 text-slate-500'
-                  }`}
-                >
-                  {provider === 'serpapi' ? 'SERPAPI ACTIVE' : 'SERP REST API'}
-                </span>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Fetches live organic Google Search results using SerpApi or compatible SERP API endpoint.
+                Generates realistic simulated search engine results. Recommended for offline testing.
               </p>
             </div>
           </div>
@@ -114,12 +110,12 @@ const Settings = () => {
               <span>Environment Variable Configuration</span>
             </div>
             <p className="text-slate-500 dark:text-slate-400">
-              API secrets are securely managed on the backend using <code className="text-sky-600 dark:text-sky-400">server/.env</code>. Frontend never exposes API keys.
+              API backend architecture is fully custom. Zero 3rd party API keys required.
             </p>
             <div className="font-mono bg-slate-900 text-slate-200 p-3 rounded-xl overflow-x-auto text-[11px]">
-              SEARCH_PROVIDER={provider}<br />
-              SEARCH_API_KEY=your_serpapi_key_here<br />
-              SEARCH_API_URL=https://serpapi.com/search.json
+              SEARCH_PROVIDER=custom<br />
+              SEARCH_ENGINE=google_live_scraper<br />
+              # 100% Custom Scraper - Zero 3rd Party API Key
             </div>
           </div>
 
