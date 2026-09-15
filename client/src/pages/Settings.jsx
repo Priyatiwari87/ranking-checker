@@ -57,7 +57,7 @@ const Settings = () => {
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="font-bold text-slate-900 dark:text-white text-sm">
-                  Custom Google Scraper (Live SERP)
+                  Custom Google Scraper Engine
                 </span>
                 <span
                   className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded ${
@@ -85,7 +85,7 @@ const Settings = () => {
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="font-bold text-slate-900 dark:text-white text-sm">
-                  Demo Provider (Simulated SERP)
+                  Demo Provider (Simulated)
                 </span>
                 <span
                   className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded ${
@@ -145,7 +145,7 @@ const Settings = () => {
           <span>Pluggable Adapter Architecture</span>
         </h3>
         <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-          RankCheck uses the Adapter Pattern with an abstract <code className="text-sky-500 font-mono">BaseSearchProvider</code> interface. Switching to Google Search, Google Maps/Local ranking, or custom SERP web scrapers requires zero frontend code modifications.
+          RankCheck uses the Adapter Pattern with an abstract <code className="text-sky-500 font-mono">BaseSearchProvider</code> interface. Switching to Google Search, Google Maps/Local ranking, or custom web scrapers requires zero frontend code modifications.
         </p>
       </div>
     </div>
