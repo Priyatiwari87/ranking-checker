@@ -8,8 +8,8 @@ RankCheck is a production-quality full-stack web application built with React, V
 
 1. **Pluggable Ranking Engine Architecture**:
    - Clean separation between core ranking matching logic and search providers using an **Adapter Pattern**.
-   - Includes **Demo Mode Provider** (clearly labeled as simulated SERP data) and **SerpApi Provider** for live Google Search/SERP data.
-   - Zero frontend code changes required to plug in Google Maps, local search, or custom SERP providers.
+   - Includes **Custom Google Web Scraper Provider** for live Google Search data and **Demo Mode Provider** for offline testing.
+   - Zero 3rd party API keys required. Zero frontend code changes required to plug in custom providers.
 
 2. **Domain Normalization & Smart Matching**:
    - Converts URLs (`https://www.abccafe.com/menu?ref=1`) to canonical domain names (`abccafe.com`).
@@ -63,7 +63,7 @@ Ranking Checker/
 │   │   └── searchProviders/
 │   │       ├── baseProvider.js
 │   │       ├── demoProvider.js
-│   │       └── serpApiProvider.js
+│   │       └── customScraperProvider.js
 │   ├── .env
 │   ├── .env.example
 │   ├── package.json
@@ -109,11 +109,7 @@ Create a `server/.env` file based on `server/.env.example`:
 ```env
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/rankcheck
-SEARCH_PROVIDER=demo
-# To use live Google Search via SerpApi:
-# SEARCH_PROVIDER=serpapi
-# SEARCH_API_KEY=your_actual_serpapi_key_here
-# SEARCH_API_URL=https://serpapi.com/search.json
+SEARCH_PROVIDER=custom
 CLIENT_ORIGIN=http://localhost:5173
 NODE_ENV=development
 ```

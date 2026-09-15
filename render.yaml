@@ -8,8 +8,4 @@ services:
       - key: NODE_ENV
         value: production
       - key: SEARCH_PROVIDER
-        value: serpapi
-      - key: SEARCH_API_KEY
-        value: 5fd1fe5a17830469270eb93f747148e7421f2c4df8e6f70141c40d3747563723
-      - key: SEARCH_API_URL
-        value: https://serpapi.com/search.json
+        value: custom

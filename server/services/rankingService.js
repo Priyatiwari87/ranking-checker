@@ -1,5 +1,4 @@
 const DemoProvider = require('./searchProviders/demoProvider');
-const SerpApiProvider = require('./searchProviders/serpApiProvider');
 const CustomScraperProvider = require('./searchProviders/customScraperProvider');
 const { normalizeDomain, isDomainMatch } = require('./domainUtils');
 
@@ -17,7 +16,6 @@ class RankingService {
     switch (providerType) {
       case 'demo':
         return new DemoProvider();
-      case 'serpapi':
       case 'custom':
       case 'scraper':
       case 'google':
