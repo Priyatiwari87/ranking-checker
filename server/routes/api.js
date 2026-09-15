@@ -5,10 +5,9 @@ const historyController = require('../controllers/historyController');
 const analyticsController = require('../controllers/analyticsController');
 const rateLimit = require('express-rate-limit');
 const limiter = rateLimit({ windowMs: 60000, max: 10 });
-app.use('/api/ranking/check', limiter);
 
 // Ranking routes
-router.post('/ranking/check', rankingController.checkRanking);
+router.post('/ranking/check', limiter, rankingController.checkRanking);
 
 // History routes
 router.get('/history', historyController.getHistory);
