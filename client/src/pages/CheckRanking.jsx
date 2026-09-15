@@ -107,23 +107,79 @@ const CheckRanking = () => {
       {/* Results View */}
       {result && !loading && (
         <div className="space-y-8 animate-fadeIn">
-          {/* Main Ranking Card */}
-          <RankingCard result={result} />
-
-          {/* Not Found View or Results Table */}
-          {result.found ? (
-            <ResultsTable results={result.results} targetDomain={result.domain} />
+          {result.isBatch ? (
+            <BatchResultsContainer result={result} onIncreaseDepth={handleIncreaseDepth} />
           ) : (
-            <NotFoundState
-              businessName={result.businessName}
-              websiteUrl={result.websiteUrl}
-              searchQuery={result.searchQuery}
-              depth={result.depth}
-              onTryAgain={() => setResult(null)}
-              onIncreaseDepth={handleIncreaseDepth}
-            />
+            <>
+              {/* Main Ranking Card */}
+              <RankingCard result={result} />
+
+              {/* Not Found View or Results Table */}
+              {result.found ? (
+                <ResultsTable results={result.results} targetDomain={result.domain} />
+              ) : (
+                <NotFoundState
+                  businessName={result.businessName}
+                  websiteUrl={result.websiteUrl}
+                  searchQuery={result.searchQuery}
+                  depth={result.depth}
+                  onTryAgain={() => setResult(null)}
+                  onIncreaseDepth={handleIncreaseDepth}
+                />
+              )}
+            </>
           )}
         </div>
+      )}
+    </div>
+  );
+};
+
+const BatchResultsContainer = ({ result, onIncreaseDepth }) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const currentResult = result.batchResults[activeIndex] || result.batchResults[0];
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <h3 className="text-base font-bold text-white">
+            Batch Search Results ({result.totalKeywords} Keywords Tested)
+          </h3>
+          <p className="text-xs text-slate-400">
+            Target Website: <span className="font-mono text-sky-400">{result.domain}</span>
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {result.batchResults.map((item, idx) => (
+            <button
+              key={idx}
+              onClick={() => setActiveIndex(idx)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                activeIndex === idx
+                  ? 'bg-sky-500 text-white shadow-md shadow-sky-500/30'
+                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+              }`}
+            >
+              #{idx + 1} {item.businessName} {item.found ? `(Rank #${item.ranking})` : '(Not Found)'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <RankingCard result={currentResult} />
+
+      {currentResult.found ? (
+        <ResultsTable results={currentResult.results} targetDomain={currentResult.domain} />
+      ) : (
+        <NotFoundState
+          businessName={currentResult.businessName}
+          websiteUrl={currentResult.websiteUrl}
+          searchQuery={currentResult.searchQuery}
+          depth={currentResult.depth}
+          onTryAgain={() => {}}
+          onIncreaseDepth={onIncreaseDepth}
+        />
       )}
     </div>
   );

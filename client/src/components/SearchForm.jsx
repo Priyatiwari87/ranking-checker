@@ -45,26 +45,27 @@ const SearchForm = ({ onSubmit, isLoading }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {/* Business Name Input */}
-        <div>
+      <div className="grid grid-cols-1 gap-5">
+        {/* Business Name / Keywords Input (Textarea) */}
+        <div className="md:col-span-2">
           <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
-            Business / Store / Cafe Name <span className="text-rose-500">*</span>
+            Keywords / Business Names <span className="text-rose-500">*</span>{' '}
+            <span className="text-slate-400 font-normal lowercase">(enter up to 10 keywords, one per line or comma-separated)</span>
           </label>
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <div className="absolute top-3.5 left-3.5 flex items-start pointer-events-none text-slate-400">
               <Search className="w-4 h-4" />
             </div>
-            <input
-              type="text"
+            <textarea
+              rows={3}
               value={businessName}
               onChange={(e) => {
                 setBusinessName(e.target.value);
                 if (errors.businessName) setErrors((prev) => ({ ...prev, businessName: null }));
               }}
-              placeholder="e.g. ABC Cafe"
+              placeholder={'e.g.\nABC Cafe\nBest Coffee in Delhi\nTop Cafe Near Me'}
               disabled={isLoading}
-              className={`w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-950 border rounded-xl text-sm font-medium text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition-all ${
+              className={`w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-950 border rounded-xl text-sm font-medium text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 transition-all resize-y ${
                 errors.businessName
                   ? 'border-rose-500 ring-rose-500/20'
                   : 'border-slate-200 dark:border-slate-800 focus:ring-sky-500/30 focus:border-sky-500'
@@ -77,8 +78,6 @@ const SearchForm = ({ onSubmit, isLoading }) => {
             </p>
           )}
         </div>
-
-        {/* Website URL Input */}
         <div>
           <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
             Website URL <span className="text-rose-500">*</span>
