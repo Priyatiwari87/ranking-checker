@@ -42,7 +42,7 @@ class SerpApiProvider extends BaseSearchProvider {
 
       const response = await axios.get(this.baseUrl, {
         params: queryParams,
-        timeout: 10000
+        timeout: 30000
       });
 
       const organicResults = response.data.organic_results || [];
