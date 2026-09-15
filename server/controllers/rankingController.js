@@ -126,7 +126,7 @@ exports.checkRanking = async (req, res) => {
   } catch (error) {
     console.error('Error in checkRanking controller:', error);
 
-    if (error.message.startsWith('CONFIG_ERROR') || error.message.startsWith('API_')) {
+    if (error.message.startsWith('CONFIG_ERROR') || error.message.startsWith('API_') || error.message.startsWith('NETWORK_ERROR')) {
       return res.status(400).json({
         success: false,
         error: error.message
@@ -135,7 +135,7 @@ exports.checkRanking = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      error: 'An error occurred while checking search rankings. Please try again.'
+      error: error.message || 'An error occurred while checking search rankings. Please try again.'
     });
   }
 };
