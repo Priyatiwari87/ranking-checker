@@ -51,7 +51,7 @@ app.get('/api/health', (req, res) => {
     status: 'ok',
     timestamp: new Date(),
     dbConnected,
-    searchProvider: process.env.SEARCH_PROVIDER || 'custom'
+    searchProvider: 'custom (Custom Google Web Scraper Provider)'
   });
 });
 
@@ -83,5 +83,5 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 RankCheck API Server listening on port ${PORT}`);
-  console.log(`📡 Search Provider: ${process.env.SEARCH_PROVIDER || 'serpapi (Google / SerpApi Provider)'}`);
+  console.log(`📡 Search Provider: Custom Google Web Scraper Provider`);
 });

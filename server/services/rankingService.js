@@ -18,7 +18,6 @@ class RankingService {
       case 'demo':
         return new DemoProvider();
       case 'serpapi':
-        return new SerpApiProvider();
       case 'custom':
       case 'scraper':
       case 'google':
