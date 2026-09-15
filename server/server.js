@@ -51,7 +51,7 @@ app.get('/api/health', (req, res) => {
     status: 'ok',
     timestamp: new Date(),
     dbConnected,
-    searchProvider: process.env.SEARCH_PROVIDER || 'serpapi'
+    searchProvider: process.env.SEARCH_PROVIDER || 'custom'
   });
 });
 

@@ -1,5 +1,6 @@
 const DemoProvider = require('./searchProviders/demoProvider');
 const SerpApiProvider = require('./searchProviders/serpApiProvider');
+const CustomScraperProvider = require('./searchProviders/customScraperProvider');
 const { normalizeDomain, isDomainMatch } = require('./domainUtils');
 
 /**
@@ -12,14 +13,17 @@ class RankingService {
   }
 
   getProviderFromEnv() {
-    const providerType = (process.env.SEARCH_PROVIDER || 'serpapi').toLowerCase();
+    const providerType = (process.env.SEARCH_PROVIDER || 'custom').toLowerCase();
     switch (providerType) {
       case 'demo':
         return new DemoProvider();
       case 'serpapi':
+        return new SerpApiProvider();
+      case 'custom':
+      case 'scraper':
       case 'google':
       default:
-        return new SerpApiProvider();
+        return new CustomScraperProvider();
     }
   }
 
