@@ -19,17 +19,29 @@ class SerpApiProvider extends BaseSearchProvider {
     }
 
     const depth = options.depth || 50;
-    const location = options.location || '';
+    let location = (options.location || '').trim();
+    const targetUrl = (options.targetUrl || '').toLowerCase();
+
+    // Smart location & country (gl) detection
+    let gl = undefined;
+    if (location.toLowerCase().includes('india') || targetUrl.endsWith('.in') || targetUrl.includes('.co.in') || targetUrl.includes('.in/')) {
+      gl = 'in';
+      if (!location) location = 'India';
+    }
 
     try {
+      const queryParams = {
+        engine: 'google',
+        q: query,
+        num: Math.min(depth, 100),
+        api_key: this.apiKey
+      };
+
+      if (location) queryParams.location = location;
+      if (gl) queryParams.gl = gl;
+
       const response = await axios.get(this.baseUrl, {
-        params: {
-          engine: 'google',
-          q: query,
-          location: location || undefined,
-          num: Math.min(depth, 100),
-          api_key: this.apiKey
-        },
+        params: queryParams,
         timeout: 10000
       });
 
