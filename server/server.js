@@ -21,8 +21,10 @@ app.use(express.json());
 // Database connection state tracking
 let dbConnected = false;
 const MONGODB_URI = process.env.MONGODB_URI;
+const isProduction = process.env.NODE_ENV === 'production' || process.env.RENDER;
+const isLocalhostUri = MONGODB_URI && (MONGODB_URI.includes('localhost') || MONGODB_URI.includes('127.0.0.1'));
 
-if (MONGODB_URI && MONGODB_URI !== 'your_mongodb_connection_string') {
+if (MONGODB_URI && MONGODB_URI !== 'your_mongodb_connection_string' && !(isProduction && isLocalhostUri)) {
   mongoose
     .connect(MONGODB_URI)
     .then(() => {
@@ -34,7 +36,7 @@ if (MONGODB_URI && MONGODB_URI !== 'your_mongodb_connection_string') {
       console.warn('⚡ Operating in DB-Fallback mode (In-Memory temporary session storage active).');
     });
 } else {
-  console.log('⚡ MONGODB_URI not provided or placeholder used. Operating in DB-Fallback mode (In-Memory session active).');
+  console.log('⚡ Cloud MONGODB_URI not configured for production. Operating in DB-Fallback mode (In-Memory session active).');
 }
 
 // Inject DB connection flag into requests
