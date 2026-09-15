@@ -50,7 +50,7 @@ const CheckHistorySchema = new mongoose.Schema(
       default: null
     },
     rankingChange: {
-      type: Number, // Positive means improved (e.g. +3), negative means dropped (-3), 0 means no change
+      type: Number, 
       default: null
     },
     provider: {
@@ -76,6 +76,7 @@ const CheckHistorySchema = new mongoose.Schema(
   }
 );
 
-CheckHistorySchema.index({ domain: 1, searchQuery: 1, checkedAt: -1 });
+CheckHistorySchema.index({ createdAt: -1 });
+CheckHistorySchema.index({ businessName: 'text' }); 
 
 module.exports = mongoose.model('CheckHistory', CheckHistorySchema);
